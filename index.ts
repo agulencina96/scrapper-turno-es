@@ -1,19 +1,7 @@
 import puppeteer from 'puppeteer';
 import { sendMail } from './sendMail';
 import * as dotenv from 'dotenv'
-import * as winston from 'winston'
 dotenv.config()
-
-
-const logger = winston.createLogger({
-    level: 'info',
-    format: winston.format.json(),
-    defaultMeta: { service: 'pasaporte-español' },
-    transports: [
-      new winston.transports.File({ filename: 'error.log', level: 'error' }),
-      new winston.transports.File({ filename: 'combined.log' }),
-    ],
-  });
 
 async function main() {
     setInterval(async() => {
@@ -67,16 +55,15 @@ async function main() {
     
         if (!noHayTurnosSelector) {
              await sendMail();
-             logger.info('Se envió mail')
+             console.log('HAY TURNOS')
         }else{
-            logger.info('No hay turnos')
+            console.log(Date.now(),'NO HAY TURNOS')
         }
 
 
             await browser.close();
         } catch (error) {
-            console.log(error);
-            logger.error(error)
+            console.error(error);
         }
     }, 10 * 60 * 1000);
 }
