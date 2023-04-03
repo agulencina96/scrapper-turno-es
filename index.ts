@@ -2,9 +2,9 @@ import puppeteer from "puppeteer";
 import { sendMail } from "./sendMail";
 
 async function main() {
-  try {
-    console.log("Iniciando script a las: ", new Date().toLocaleString());
-    setInterval(async () => {
+  setInterval(async () => {
+    try {
+      console.log("Iniciando script a las: ", new Date().toLocaleString());
       console.log("Nuevo intento a las: ", new Date().toLocaleString());
       const browser = await puppeteer.launch();
       const page = await browser.newPage();
@@ -62,11 +62,11 @@ async function main() {
         console.log(new Date().toLocaleString(), "NO HAY TURNOS");
       }
       await browser.close();
-    }, 2 * 60 * 1000);
-  } catch (error) {
-    console.error("Error: ", new Date().toLocaleString());
-    console.error(error);
-  }
+    } catch (error) {
+      console.error("Error: ", new Date().toLocaleString());
+      console.error(error);
+    }
+  }, 2 * 60 * 1000);
 }
 
 main();
