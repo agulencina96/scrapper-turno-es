@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf ./build && tsc",
     "start": "node build/index.js"
   },
   "dependencies": {
