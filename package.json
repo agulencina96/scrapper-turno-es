@@ -1,7 +1,8 @@
 {
   "scripts": {
     "build": "rm -rf ./build && tsc",
-    "start": "yarn build && node build/index.js"
+    "start": "yarn build && node build/index.js",
+    "dev": "npx ts-node index.ts"
   },
   "dependencies": {
     "@google-cloud/local-auth": "2.1.0",
