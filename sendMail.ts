@@ -1,6 +1,6 @@
+import * as dotenv from "dotenv";
 import { google } from "googleapis";
 import * as nodemailer from "nodemailer";
-import * as dotenv from "dotenv";
 
 export const sendMail = async () => {
   dotenv.config();
@@ -40,7 +40,7 @@ export const sendMail = async () => {
       from: process.env.from,
       to: process.env.to?.split(","),
       subject: "PASAPORTE HAY TURNO",
-      text: "HAY TURNOS PASAPORTE ESPAÑOL https://www.exteriores.gob.es/Consulados/cordoba/es/ServiciosConsulares/Paginas/index.aspx?scco=Argentina&scd=129&scca=Pasaportes+y+otros+documentos&scs=Pasaportes+-+Requisitos+y+procedimiento+para+obtenerlo",
+      text: "HAY TURNOS PASAPORTE ESPAÑOL https://www.exteriores.gob.es/Consulados/cordoba/es/Comunicacion/Noticias/Paginas/Articulos/Instrucciones-para-solicitar-cita-previa-para-LMD.aspx",
       auth: {
         user: process.env.user,
         accessToken: accessToken ?? "",
@@ -56,7 +56,6 @@ export const sendMail = async () => {
         console.log("Email sent: " + info.response);
       }
     });
-    console.log("mail sent");
   } catch (error) {
     console.error(error);
   }

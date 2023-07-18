@@ -1,15 +1,72 @@
 import puppeteer from "puppeteer";
 import { sendMail } from "./sendMail";
 console.log("Iniciando script a las: ", new Date().toLocaleString());
-
+const timeToWait = 5 * 60 * 1000;
 async function main() {
-  await checkTurn();
+  // await checkForRenovarion();
+  await checkForNacionality();
   setInterval(async () => {
-    await checkTurn();
-  }, 2 * 60 * 1000);
+    // await checkForRenovarion();
+    await checkForNacionality();
+  }, timeToWait);
 }
 
-async function checkTurn() {
+async function checkForNacionality() {
+  try {
+    console.log("Nuevo intento a las: ", new Date().toLocaleString());
+    const browser = await puppeteer.launch({
+      headless: true,
+    });
+    try {
+      const page = await browser.newPage();
+      console.log("Dirigiendose a la pagina de exteriores.gob.es...");
+      await page.goto(
+        "https://www.exteriores.gob.es/Consulados/cordoba/es/Comunicacion/Noticias/Paginas/Articulos/Instrucciones-para-solicitar-cita-previa-para-LMD.aspx"
+      );
+      console.log("Esperando a que cargue la pagina...");
+      const textSelector = await page.waitForSelector(
+        "#main-container > main > div > div.col-12.col-md-8.col-lg-9 > section > div > div.single__text > div > div > div:nth-child(6) > a"
+      );
+      console.log("Clickeando en el link...");
+      await textSelector?.evaluate((node) => node.click());
+      console.log("Esperando a que cargue la pagina...");
+      let pages = await browser.pages();
+      while (pages.length < 2) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        pages = await browser.pages();
+      }
+      const page2 = pages[1];
+      await page2.bringToFront();
+      console.log("Revisando si hay turnos...");
+      const thereAreNoTurnsSelector = await page2.waitForSelector(
+        "#idDivBktServicesContainer > div:nth-child(1)"
+      );
+      if (thereAreNoTurnsSelector) {
+        console.log(
+          new Date().toLocaleString(),
+          "NO hay turnos... nuevo intento en:",
+          timeToWait / 1000 / 60,
+          "minutos."
+        );
+        await sendMail();
+        await browser.close();
+        return;
+      } else {
+        await sendMail();
+        console.log(new Date().toLocaleString(), "HAY TURNOS!!!!!!!!");
+        await browser.close();
+      }
+    } catch (error) {
+      console.error("Error: ", error, new Date().toLocaleString());
+      await browser.close();
+    }
+    await browser.close();
+  } catch (error) {
+    console.error("Error: ", error, new Date().toLocaleString());
+  }
+}
+
+async function checkForRenovarion() {
   try {
     const browser = await puppeteer.launch({
       headless: false,

@@ -12,6 +12,7 @@
     "puppeteer": "^19.6.0"
   },
   "devDependencies": {
+    "@types/node": "^20.4.2",
     "@types/nodemailer": "^6.4.7",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.3",
